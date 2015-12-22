@@ -40,7 +40,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<Movie>> {
         final String JON_TITLE = "original_title";
         final String JON_RATING = "vote_average";
 
-        String thumbBaseUrl = "http://image.tmdb.org/t/p/w92/";
+        String thumbBaseUrl = "http://image.tmdb.org/t/p/w185/";
         String posterBaseUrl = "http://image.tmdb.org/t/p/w185/";
         String backdropBaseUrl = "http://image.tmdb.org/t/p/w342/";
 
