@@ -126,7 +126,7 @@ public class FavouriteProvider extends ContentProvider {
             case FAVOURITE:
                 rowsUpdated = db.update(MovieContract.FavouriteEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
-         
+
             default:
                 throw new UnsupportedOperationException("Unknown Uri "+ uri);
         }
