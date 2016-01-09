@@ -59,7 +59,7 @@ public class FavouriteFragment extends Fragment implements LoaderManager.LoaderC
         // set mGridView adapter to our CursorAdapter
         mGridView.setAdapter(mFavouriteAdapter);
 
-       
+
         return rootView;
     }
 
