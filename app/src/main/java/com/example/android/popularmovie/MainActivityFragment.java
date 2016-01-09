@@ -25,6 +25,7 @@ public class MainActivityFragment extends Fragment  {
     private GridView mGridView;
     private MovieAdapter mMovieAdapter;
     //Keys for Intent to detail activity
+    public static final String MOVIE_ID = "MOVIE_ID";
     public static final String MOVIE_TITLE = "MOVIE_TITLE";
     public static final String MOVIE_POSTER = "MOVIE_POSTER";
     //public static final String MOVIE_THUMB = "MOVIE_THUMB";
@@ -66,6 +67,7 @@ public class MainActivityFragment extends Fragment  {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent detailIntent = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra(MOVIE_ID, movies.get(position).id)
                         .putExtra(MOVIE_TITLE, movies.get(position).title)
                         .putExtra(MOVIE_POSTER, movies.get(position).poster)
                         .putExtra(MOVIE_BACKDROP, movies.get(position).back_drop)

@@ -94,8 +94,8 @@
             android:text="@string/trailer_title"
             android:layout_below="@+id/movie_overview_text"
             style="@style/detail_subtitle"/>/>
-        <TextView
-            android:id="@+id/trailer_text_view"
+        <ListView
+            android:id="@+id/trailer_list_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="trailer title comes here"
@@ -106,15 +106,15 @@
             android:layout_height="wrap_content"
             android:id="@+id/review_title"
             android:text="@string/review_title"
-            android:layout_below="@+id/trailer_text_view"
+            android:layout_below="@+id/trailer_list_view"
             style="@style/detail_subtitle"/>/>
-        <TextView
+        <ListView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/review_text_view"
+            android:id="@+id/review_list_view"
             android:layout_below="@+id/review_title"
             android:text="review comes here"
-            style="@style/detail_overview"
+
             />
 
     </RelativeLayout>
