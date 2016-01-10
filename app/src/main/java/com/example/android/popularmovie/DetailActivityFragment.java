@@ -1,5 +1,6 @@
 package com.example.android.popularmovie;
 
+import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -12,7 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import com.example.android.popularmovie.data.MovieContract;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -27,6 +31,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -35,7 +40,14 @@ public class DetailActivityFragment extends Fragment {
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
     private List<String> movieTrailerList = new ArrayList<>();
     private List<String> movieReviewList = new ArrayList<>();
-    public String movie_id;
+    protected String movie_id;
+    protected String movie_title;
+    protected String movie_poster;
+    protected String movie_backdrop;
+    protected String movie_release;
+    protected String movie_rating;
+    protected String movie_overview;
+    private ToggleButton toggleButton;
 
     public DetailActivityFragment() {
     }
@@ -53,7 +65,7 @@ public class DetailActivityFragment extends Fragment {
 
         //pass title
         if (intent != null && intent.hasExtra("MOVIE_TITLE")) {
-            String movie_title = intent.getStringExtra("MOVIE_TITLE");
+            movie_title = intent.getStringExtra("MOVIE_TITLE");
             ((TextView) detailView.findViewById(R.id.movie_title_text))
                     .setText(movie_title);
 
@@ -61,7 +73,7 @@ public class DetailActivityFragment extends Fragment {
             getActivity().setTitle(movie_title);
 
             //pass poster image
-            String movie_poster = intent.getStringExtra("MOVIE_POSTER");
+            movie_poster = intent.getStringExtra("MOVIE_POSTER");
             Log.i(LOG_TAG, "poster URL: " + movie_poster);
             ImageView poster = (ImageView) detailView.findViewById(R.id.poster_image_view);
             Picasso
@@ -70,7 +82,7 @@ public class DetailActivityFragment extends Fragment {
                     .fit()
                     .into(poster);
             //pass Backdrop image
-            String movie_backdrop = intent.getStringExtra("MOVIE_BACKDROP");
+            movie_backdrop = intent.getStringExtra("MOVIE_BACKDROP");
             Log.i(LOG_TAG, "Backdrop URL: " + movie_backdrop);
             ImageView backdrop = (ImageView) detailView.findViewById(R.id.backdrop_image_view);
             Picasso
@@ -80,21 +92,53 @@ public class DetailActivityFragment extends Fragment {
                     .into(backdrop);
 
             //pass release date
-            String movie_release = intent.getStringExtra("MOVIE_RELEASE");
+            movie_release = intent.getStringExtra("MOVIE_RELEASE");
             ((TextView) detailView.findViewById(R.id.movie_releas_date_text))
                     .setText(movie_release);
             //pass rating
-            String movie_rating = intent.getStringExtra("MOVIE_RATING");
+            movie_rating = intent.getStringExtra("MOVIE_RATING");
             ((TextView) detailView.findViewById(R.id.movie_rating_text))
                     .setText(movie_rating);
             //pass overview
-            String movie_overview = intent.getStringExtra("MOVIE_OVERVIEW");
+            movie_overview = intent.getStringExtra("MOVIE_OVERVIEW");
             ((TextView) detailView.findViewById(R.id.movie_overview_text))
                     .setText(movie_overview);
+            //Execute FetchTrailerTask
+            FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
+            fetchTrailerTask.execute();
+            //Execute FetchReviewTask
+            FetchReviewTask fetchReviewTask = new FetchReviewTask();
+            fetchReviewTask.execute();
         }
         return detailView;
     }
+    // Favourite button onClick
+    public void favouriteClick (View view){
+        boolean isOn;
 
+        if (isOn = true){
+            insertFavourite();
+
+        }else {
+            deleteFavourite();
+        }
+    }
+    //insert movie to FavouriteEntry table
+    public void insertFavourite () {
+        ContentValues favouriteMovieValues = new ContentValues();
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_MOVIE_ID, movie_id);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_TITLE,movie_title);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_BACK_DROP, movie_backdrop);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_OVERVIEW, movie_overview);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_POSTER,movie_poster);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RELEASE_DATE, movie_release);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RATING,movie_rating);
+        getActivity().getContentResolver().insert(MovieContract.FavouriteEntry.CONTENT_URI, favouriteMovieValues);
+    }
+    public void deleteFavourite(){
+        getActivity().getContentResolver().delete(MovieContract.FavouriteEntry.CONTENT_URI, movie_id, null);
+
+    }
     // Add FetchTrailerTask
     public class FetchTrailerTask extends AsyncTask<String, Void, String> {
         private void getTrailerDataFromJson(String trailerJsonStr) throws JSONException {
@@ -268,8 +312,8 @@ public class DetailActivityFragment extends Fragment {
                 ArrayList<Review> reviews = new ArrayList<>();
 
                 ListView reviewListView = (ListView) getView().findViewById(R.id.review_list_view);
-                ReviewAdapter ta = new ReviewAdapter (getContext(),reviews);
-                reviewListView.setAdapter(ta);
+                ReviewAdapter ra = new ReviewAdapter (getContext(),reviews);
+                reviewListView.setAdapter(ra);
             }
         }
 

@@ -71,13 +71,22 @@
                 android:text="/10"/>
 
         </LinearLayout>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favourite"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:id="@+id/favourite_button"
+            android:onClick="favouriteClick"
+            android:layout_below="@+id/rating_container"
+            android:layout_toRightOf="@+id/poster_image_view"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/overview_title"
             android:text="@string/overview_title"
-            android:layout_below="@+id/poster_image_view"
+            android:layout_below="@+id/favourite_button"
             style="@style/detail_subtitle"/>
         <TextView
             android:layout_width="match_parent"
