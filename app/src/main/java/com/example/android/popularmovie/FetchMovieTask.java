@@ -73,7 +73,7 @@ public class FetchMovieTask extends AsyncTask<String, Void, ArrayList<Movie>> {
             rating = currentMovie.getString(JON_RATING);
 
             // Make a movie object and add to movie list
-            Movie movie = new Movie(thumb, title, poster, back_drop,overview, release_date, rating);
+            Movie movie = new Movie(id, thumb, title, poster, back_drop,overview, release_date, rating);
             resultMovies.add(movie);
             Log.i(LOG_TAG, movie.toString());
         }

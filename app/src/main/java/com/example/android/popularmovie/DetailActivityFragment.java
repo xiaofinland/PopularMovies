@@ -141,6 +141,8 @@ public class DetailActivityFragment extends Fragment {
     }
     // Add FetchTrailerTask
     public class FetchTrailerTask extends AsyncTask<String, Void, String> {
+        private final String LOG_TAG = FetchTrailerTask.class.getSimpleName();
+
         private void getTrailerDataFromJson(String trailerJsonStr) throws JSONException {
             //get the root "result" array
             JSONObject trailerObject = new JSONObject(trailerJsonStr);
@@ -253,7 +255,7 @@ public class DetailActivityFragment extends Fragment {
                 String reviewDataStr = null;
                 try {
                     //construct URL
-                    final String BASE_URL = "http://api.themoviedb.org/3/movie/" + "movie_id" + "/reviews";
+                    final String BASE_URL = "http://api.themoviedb.org/3/movie/" + movie_id + "/reviews";
 
                     Uri buildUri = Uri.parse(BASE_URL).buildUpon()
                             .appendQueryParameter("api_key", BuildConfig.MOVIE_DATABASE_API_KEY)
@@ -307,7 +309,7 @@ public class DetailActivityFragment extends Fragment {
             }
             @Override
             protected void onPostExecute(String result) {
-                Log.i(LOG_TAG, "Result trailer is:   " + movieTrailerList);
+                Log.i(LOG_TAG, "Result review is:   " + movieReviewList);
 
                 ArrayList<Review> reviews = new ArrayList<>();
 
