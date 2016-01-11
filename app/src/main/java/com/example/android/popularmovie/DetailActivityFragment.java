@@ -106,13 +106,23 @@ public class DetailActivityFragment extends Fragment {
             ((TextView) detailView.findViewById(R.id.movie_overview_text))
                     .setText(movie_overview);
             //Execute FetchTrailerTask
-            FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
-            fetchTrailerTask.execute();
+            //FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
+            //fetchTrailerTask.execute();
             //Execute FetchReviewTask
-            FetchReviewTask fetchReviewTask = new FetchReviewTask();
-            fetchReviewTask.execute();
+            //FetchReviewTask fetchReviewTask = new FetchReviewTask();
+            //fetchReviewTask.execute();
         }
         return detailView;
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+        //Execute FetchTrailerTask
+        FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
+        fetchTrailerTask.execute();
+        //Execute FetchReviewTask
+        FetchReviewTask fetchReviewTask = new FetchReviewTask();
+        fetchReviewTask.execute();
     }
     // Favourite button onClick
     public void favouriteClick(View view){
@@ -236,6 +246,11 @@ public class DetailActivityFragment extends Fragment {
             Log.i(LOG_TAG, "Result trailer is:   " + movieTrailerList);
 
             ArrayList<Trailer> trailers = new ArrayList<>();
+            for (int i=0; i< movieTrailerList.size(); i++){
+                Trailer trailer = new Trailer();
+                trailer.name = movieTrailerList.get(i);
+                trailers.add(trailer);
+            }
 
             ListView trailerListView = (ListView) getView().findViewById(R.id.trailer_list_view);
             TrailerAdapter ta = new TrailerAdapter (getContext(),trailers);
@@ -323,6 +338,12 @@ public class DetailActivityFragment extends Fragment {
                 Log.i(LOG_TAG, "Result review is:   " + movieReviewList);
 
                 ArrayList<Review> reviews = new ArrayList<>();
+
+                for (int i=0; i< movieReviewList.size(); i++){
+                    Review review = new Review();
+                    review.content =  movieReviewList.get(i);
+                    reviews.add(review);
+                }
 
                 ListView reviewListView = (ListView) getView().findViewById(R.id.review_list_view);
                 ReviewAdapter ra = new ReviewAdapter (getContext(),reviews);

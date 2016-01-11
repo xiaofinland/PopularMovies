@@ -108,6 +108,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="trailer title comes here"
+            style="@style/detail_review"
             android:layout_below="@+id/trailer_title"/>
 
         <TextView
@@ -123,7 +124,7 @@
             android:id="@+id/review_list_view"
             android:layout_below="@+id/review_title"
             android:text="review comes here"
-
+            style="@style/detail_review"
             />
 
     </RelativeLayout>
