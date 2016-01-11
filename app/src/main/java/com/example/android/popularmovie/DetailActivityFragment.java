@@ -1,7 +1,9 @@
 package com.example.android.popularmovie;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -113,18 +115,26 @@ public class DetailActivityFragment extends Fragment {
         return detailView;
     }
     // Favourite button onClick
-    public void favouriteClick (View view){
-        boolean isOn;
+    public void favouriteClick(View view){
+        if (view.getId()==R.id.favourite_button) {
+            Uri uri = MovieContract.FavouriteEntry.CONTENT_URI.buildUpon().appendPath(movie_id).build();
+            Cursor favouritecursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+            if (favouritecursor.moveToNext() != true) {
+                ContentValues contentValues = generateContentValues();
+                Uri insertedUri = getActivity().getContentResolver().insert(MovieContract.FavouriteEntry.CONTENT_URI, contentValues);
+                long id = ContentUris.parseId(insertedUri);
+                if (id != -1) {
+                    Toast.makeText(getActivity(), "Added to Favourites", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                deleteFavourite();
+                Toast.makeText(getActivity(), "Delete from favourites", Toast.LENGTH_SHORT).show();
+            }
 
-        if (isOn = true){
-            insertFavourite();
-
-        }else {
-            deleteFavourite();
         }
     }
     //insert movie to FavouriteEntry table
-    public void insertFavourite () {
+    private ContentValues generateContentValues () {
         ContentValues favouriteMovieValues = new ContentValues();
         favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_MOVIE_ID, movie_id);
         favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_TITLE,movie_title);
@@ -133,7 +143,8 @@ public class DetailActivityFragment extends Fragment {
         favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_POSTER,movie_poster);
         favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RELEASE_DATE, movie_release);
         favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RATING,movie_rating);
-        getActivity().getContentResolver().insert(MovieContract.FavouriteEntry.CONTENT_URI, favouriteMovieValues);
+
+        return favouriteMovieValues;
     }
     public void deleteFavourite(){
         getActivity().getContentResolver().delete(MovieContract.FavouriteEntry.CONTENT_URI, movie_id, null);
