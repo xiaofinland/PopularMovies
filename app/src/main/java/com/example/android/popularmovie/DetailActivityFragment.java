@@ -1,25 +1,20 @@
 package com.example.android.popularmovie;
 
-import android.content.ContentUris;
 import android.content.ContentValues;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View.OnClickListener;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import com.example.android.popularmovie.data.MovieContract;
 import com.squareup.picasso.Picasso;
@@ -36,14 +31,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class DetailActivityFragment extends Fragment  {
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
-    private List<String> movieTrailerList = new ArrayList<>();
+    private List<String> movieTrailerListKey = new ArrayList<>();
+    private List<String> movieTrailerListName = new ArrayList<>();
     private List<String> movieReviewList = new ArrayList<>();
     protected String movie_id;
     protected String movie_title;
@@ -54,6 +49,8 @@ public class DetailActivityFragment extends Fragment  {
     protected String movie_overview;
     protected Button favouriteButton;
 
+    ArrayList<Trailer> trailers = new ArrayList<>();
+
     public DetailActivityFragment() {
     }
 
@@ -62,7 +59,7 @@ public class DetailActivityFragment extends Fragment  {
                              Bundle savedInstanceState) {
         View detailView = inflater.inflate(R.layout.fragment_detail, container, false);
         Intent intent = getActivity().getIntent();
-        favouriteButton.findViewById(R.id.favourite_button);
+        /**favouriteButton.findViewById(R.id.favourite_button);
         favouriteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,7 +81,7 @@ public class DetailActivityFragment extends Fragment  {
             }
 
         });
-
+*/
          //pass ID
         if (intent != null && intent.hasExtra("MOVIE_ID")) {
             movie_id = intent.getStringExtra("MOVIE_ID");
@@ -131,6 +128,19 @@ public class DetailActivityFragment extends Fragment  {
             movie_overview = intent.getStringExtra("MOVIE_OVERVIEW");
             ((TextView) detailView.findViewById(R.id.movie_overview_text))
                     .setText(movie_overview);
+
+            ListView trailerListView = (ListView) detailView.findViewById(R.id.trailer_list_view);
+            TrailerAdapter ta = new TrailerAdapter (getContext(),trailers);
+            trailerListView.setAdapter(ta);
+
+            trailerListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    startActivity(new Intent (Intent.ACTION_VIEW, Uri.parse(trailers.get(position).getKey())));
+                }
+            });
+
+
             //Execute FetchTrailerTask
             //FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
             //fetchTrailerTask.execute();
@@ -209,9 +219,11 @@ public class DetailActivityFragment extends Fragment  {
             for (int i = 0; i < trailerArray.length(); i++) {
                 JSONObject trailer = trailerArray.getJSONObject(i);
                 if (trailer.getString("site").contentEquals("YouTube")) {
-                    movieTrailerList.add(i, YoutubeBaseUrl + trailer.getString("key"));
+                    movieTrailerListKey.add(i, YoutubeBaseUrl + trailer.getString("key"));
+                    movieTrailerListName.add(i, trailer.getString("name"));
                 }
-                Log.i(LOG_TAG, " YouTube URL is: " + movieTrailerList.get(i));
+                Log.i(LOG_TAG, " YouTube URL is: " + movieTrailerListKey.get(i));
+                Log.i(LOG_TAG, " YouTube Trailer name is: " + movieTrailerListName.get(i));
             }
         }
 
@@ -278,18 +290,21 @@ public class DetailActivityFragment extends Fragment  {
 
         @Override
         protected void onPostExecute(String result) {
-            Log.i(LOG_TAG, "Result trailer is:   " + movieTrailerList);
+            Log.i(LOG_TAG, "Result trailer url is:   " + movieTrailerListKey);
+            Log.i(LOG_TAG, "Result trailer name is:   " + movieTrailerListName);
 
-            ArrayList<Trailer> trailers = new ArrayList<>();
-            for (int i=0; i< movieTrailerList.size(); i++){
+            //ArrayList<Trailer> trailers = new ArrayList<>();
+            for (int i=0; i< movieTrailerListKey.size(); i++){
                 Trailer trailer = new Trailer();
-                trailer.name = movieTrailerList.get(i);
+                trailer.name = movieTrailerListName.get(i);
+                trailer.key = movieTrailerListKey.get(i);
                 trailers.add(trailer);
             }
-
+            /**
             ListView trailerListView = (ListView) getView().findViewById(R.id.trailer_list_view);
             TrailerAdapter ta = new TrailerAdapter (getContext(),trailers);
             trailerListView.setAdapter(ta);
+             */
             }
         }
 
