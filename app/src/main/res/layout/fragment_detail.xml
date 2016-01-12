@@ -77,7 +77,7 @@
             android:text="Favourite"
             android:layout_marginLeft="@dimen/margin_large"
             android:id="@+id/favourite_button"
-            android:onClick="favouriteClick"
+
             android:layout_below="@+id/rating_container"
             android:layout_toRightOf="@+id/poster_image_view"/>
 
