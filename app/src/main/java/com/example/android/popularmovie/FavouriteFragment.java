@@ -48,22 +48,37 @@ public class FavouriteFragment extends Fragment implements LoaderManager.LoaderC
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // inflate fragment_main layout
-        final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        // inflate favourite_grid layout
+        final View rootView = inflater.inflate(R.layout.favourite_grid, container, false);
 
 
-        // initialize our FlavorAdapter
+        // initialize our FavouriteAdapter
         mFavouriteAdapter = new FavouriteAdapter(getActivity(), null, 0, CURSOR_LOADER_ID);
-        // initialize mGridView to the GridView in fragment_main.xml
+        // initialize mGridView to the GridView in favourite_grid.xml
         mGridView = (GridView) rootView.findViewById(R.id.favourite_grid_view);
         // set mGridView adapter to our CursorAdapter
         mGridView.setAdapter(mFavouriteAdapter);
 
-
+        //make each item clickable
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            @Override
+            public void onItemClick(AdapterView<?> parent,View view,int position, long id){
+                //increment the position to match database ids indexed starting at 1
+                int uriId = position +1;
+                //append Id to uri
+                Uri uri =ContentUris.withAppendedId(MovieContract.FavouriteEntry.CONTENT_URI,uriId);
+                //create fragment
+                DetailFavouriteFragment detailFragment = DetailFavouriteFragment.newInstance(uriId, uri);
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.container_favourite,detailFragment)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
         return rootView;
     }
 
-    // Attach loader to our flavors database query
+    // Attach loader to favourite database query
     // run when loader is initialized
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args){

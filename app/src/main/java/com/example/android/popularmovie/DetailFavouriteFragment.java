@@ -1,0 +1,124 @@
+package com.example.android.popularmovie;
+
+import android.database.Cursor;
+import android.database.DatabaseUtils;
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.example.android.popularmovie.data.MovieContract;
+
+/**
+ * Created by Xiao on 13/01/2016.
+ */
+public class DetailFavouriteFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+    private Cursor mDetailCursor;
+    private ImageView poster;
+    private ImageView backdrop;
+    private TextView movie_title;
+    private TextView movie_release;
+    private TextView movie_rating;
+    private TextView movie_overview;
+    private int mPosition;
+
+    private Uri mUri;
+    private static final int CURSOR_LOADER_ID = 0;
+
+
+    public static DetailFavouriteFragment newInstance(int position, Uri uri) {
+        DetailFavouriteFragment fragment = new DetailFavouriteFragment();
+        Bundle args = new Bundle();
+        fragment.mPosition = position;
+        fragment.mUri = uri;
+        args.putInt("id", position);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public DetailFavouriteFragment() {
+        // Required empty public constructor
+    }
+
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+        poster = (ImageView) rootView.findViewById(R.id.poster_image_view);
+        backdrop= (ImageView) rootView.findViewById(R.id.backdrop_image_view);
+        movie_title = (TextView)rootView.findViewById(R.id.movie_title_text);
+        movie_release = (TextView) rootView.findViewById(R.id.movie_releas_date_text);
+        movie_rating = (TextView)rootView.findViewById(R.id.movie_rating_text);
+        movie_overview = (TextView) rootView.findViewById(R.id.movie_overview_text);
+
+        Bundle args = this.getArguments();
+        getLoaderManager().initLoader(CURSOR_LOADER_ID, args, DetailFavouriteFragment.this);
+
+        return rootView;
+    }
+
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+//        mListener = null;
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args){
+        String selection = null;
+        String [] selectionArgs = null;
+        if (args != null){
+            selection = MovieContract.FavouriteEntry._ID;
+            selectionArgs = new String[]{String.valueOf(mPosition)};
+        }
+        return new CursorLoader(getActivity(),
+                mUri,
+                null,
+                selection,
+                selectionArgs,
+                null);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState){
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    // Set the cursor in our CursorAdapter once the Cursor is loaded
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mDetailCursor = data;
+        mDetailCursor.moveToFirst();
+        DatabaseUtils.dumpCursor(data);
+        poster.setImageResource(mDetailCursor.getInt(5));
+        backdrop.setImageResource(mDetailCursor.getInt(4));
+        movie_title.setText(mDetailCursor.getString(2));
+        movie_release.setText(mDetailCursor.getString(8));
+        movie_rating.setText(mDetailCursor.getString(7));
+        movie_overview.setText(mDetailCursor.getString(6));
+    }
+
+    // reset CursorAdapter on Loader Reset
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader){
+        mDetailCursor = null;
+    }
+
+}
+
