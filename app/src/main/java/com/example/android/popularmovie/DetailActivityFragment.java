@@ -192,11 +192,13 @@ public class DetailActivityFragment extends Fragment  {
                 ContentValues favouriteMovieValues = new ContentValues();
                 favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_MOVIE_ID, movie_id);
                 favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_TITLE, movie_title);
+
                 favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_BACK_DROP, movie_backdrop);
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_OVERVIEW, movie_overview);
                 favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_POSTER, movie_poster);
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RELEASE_DATE, movie_release);
+                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_OVERVIEW, movie_overview);
                 favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RATING, movie_rating);
+                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RELEASE_DATE, movie_release);
+
 
                 return favouriteMovieValues;
             }

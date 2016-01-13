@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.android.popularmovie.data.MovieContract;
@@ -27,6 +28,8 @@ public class DetailFavouriteFragment extends Fragment implements LoaderManager.L
     private TextView movie_release;
     private TextView movie_rating;
     private TextView movie_overview;
+    private ListView trailer;
+    private ListView review;
     private int mPosition;
 
     private Uri mUri;
@@ -65,6 +68,8 @@ public class DetailFavouriteFragment extends Fragment implements LoaderManager.L
         movie_release = (TextView) rootView.findViewById(R.id.movie_releas_date_text);
         movie_rating = (TextView)rootView.findViewById(R.id.movie_rating_text);
         movie_overview = (TextView) rootView.findViewById(R.id.movie_overview_text);
+        trailer = (ListView)rootView.findViewById(R.id.trailer_list_view);
+        review = (ListView) rootView.findViewById(R.id.review_list_view);
 
         Bundle args = this.getArguments();
         getLoaderManager().initLoader(CURSOR_LOADER_ID, args, DetailFavouriteFragment.this);
@@ -112,6 +117,7 @@ public class DetailFavouriteFragment extends Fragment implements LoaderManager.L
         movie_release.setText(mDetailCursor.getString(8));
         movie_rating.setText(mDetailCursor.getString(7));
         movie_overview.setText(mDetailCursor.getString(6));
+
     }
 
     // reset CursorAdapter on Loader Reset
