@@ -5,12 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 
+import com.example.android.popularmovie.data.MovieContract.FavouriteEntry;
 
 /**
  * Created by Xiao on 22/12/2015.
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 21;
 
     public static final String DATABASE_NAME ="movie.db";
 
@@ -19,20 +20,18 @@ public class MovieDbHelper extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate (SQLiteDatabase sqLiteDatabase){
-        // Create a table to hold favourites.  A favourite consists of the string supplied in the movie_id
-        final String SQL_CREATE_FAVOURITE_TABLE = "CREATE TABLE " + MovieContract.FavouriteEntry.TABLE_NAME + " (" +
-                MovieContract.FavouriteEntry._ID + "INTEGER PRIMARY KEY," +
-                MovieContract.FavouriteEntry.COLUMN_MOVIE_ID + "REAL NOT NULL" +
-                MovieContract.FavouriteEntry.COLUMN_TITLE +"REAL NOT NULL"+
-                MovieContract.FavouriteEntry.COLUMN_THUMB + "REAL NOT NULL" +
-                MovieContract.FavouriteEntry.COLUMN_BACK_DROP + "REAL NOT NULL" +
-                MovieContract.FavouriteEntry.COLUMN_POSTER + "REAL NOT NULL"+
-                MovieContract.FavouriteEntry.COLUMN_OVERVIEW + "REAL NOT NULL" +
-                MovieContract.FavouriteEntry.COLUMN_RATING + "REAL NOT NULL" +
-                MovieContract.FavouriteEntry.COLUMN_RELEASE_DATE + "REAL NOT NULL" +
-                MovieContract.FavouriteEntry.COLUMN_REVIEW + "REAL NOT NULL" +
-                MovieContract.FavouriteEntry.COLUMN_TRAILER + "REAL NOT NULL" +
-                " )";
+
+        final String SQL_CREATE_FAVOURITE_TABLE = "CREATE TABLE " +
+                FavouriteEntry.TABLE_NAME + " (" +
+                FavouriteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                FavouriteEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
+                FavouriteEntry.COLUMN_TITLE +" TEXT NOT NULL, "+
+                FavouriteEntry.COLUMN_THUMB + " TEXT NOT NULL, " +
+                FavouriteEntry.COLUMN_BACK_DROP + " TEXT NOT NULL, " +
+                FavouriteEntry.COLUMN_POSTER + " TEXT NOT NULL, "+
+                FavouriteEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
+                FavouriteEntry.COLUMN_RATING + " REAL NOT NULL, " +
+                FavouriteEntry.COLUMN_RELEASE_DATE + " TEXT NOT NULL); " ;
 
 
         sqLiteDatabase.execSQL(SQL_CREATE_FAVOURITE_TABLE);

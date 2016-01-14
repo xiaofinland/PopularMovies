@@ -47,6 +47,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.android.popularmovie.MainActivity" />
         </activity>
+        <provider
+            android:authorities="com.example.android.popularmovie.app"
+            android:name=".data.FavouriteProvider"
+            android:exported="false"
+            android:syncable="true"/>
     </application>
 
 </manifest>

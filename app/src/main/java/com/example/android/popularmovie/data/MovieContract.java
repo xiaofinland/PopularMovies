@@ -27,19 +27,22 @@ public class MovieContract {
         public static final String CONTENT_ITEM_TYPE = ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_FAVOURITE;
 
         public static final  String TABLE_NAME = "favourite";
+
         public static final String COLUMN_MOVIE_ID = "movie_id";
+        public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_THUMB = "thumb";
         public static final String COLUMN_BACK_DROP = "back_drop";
-        public static final String COLUMN_TITLE = "title";
         public static final String COLUMN_POSTER = "poster";
         public static final String COLUMN_OVERVIEW = "overview";
-        public static final String COLUMN_RELEASE_DATE = "release_date";
         public static final String COLUMN_RATING = "rating";
-        public static final String COLUMN_REVIEW = "review";
-        public static final String COLUMN_TRAILER = "trailer";
+        public static final String COLUMN_RELEASE_DATE = "release_date";
+
 
         public static Uri buildFavouriteUri (Long id){
             return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+        public static String getFavouriteIdFromUri(Uri uri) {
+            return uri.getPathSegments().get(1);
         }
     }
 

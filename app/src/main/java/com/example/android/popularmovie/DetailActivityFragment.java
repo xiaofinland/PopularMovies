@@ -1,7 +1,9 @@
 package com.example.android.popularmovie;
 
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.popularmovie.data.MovieContract;
 import com.squareup.picasso.Picasso;
@@ -35,13 +38,14 @@ import java.util.List;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class DetailActivityFragment extends Fragment  {
+public class DetailActivityFragment extends Fragment implements View.OnClickListener  {
     private static final String LOG_TAG = DetailActivityFragment.class.getSimpleName();
     private List<String> movieTrailerListKey = new ArrayList<>();
     private List<String> movieTrailerListName = new ArrayList<>();
     private List<String> movieReviewList = new ArrayList<>();
     protected String movie_id;
     protected String movie_title;
+    protected String movie_thumb;
     protected String movie_poster;
     protected String movie_backdrop;
     protected String movie_release;
@@ -59,29 +63,9 @@ public class DetailActivityFragment extends Fragment  {
                              Bundle savedInstanceState) {
         View detailView = inflater.inflate(R.layout.fragment_detail, container, false);
         Intent intent = getActivity().getIntent();
-        /**favouriteButton.findViewById(R.id.favourite_button);
-        favouriteButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v.getId() == R.id.favourite_button) {
-                    Uri uri = MovieContract.FavouriteEntry.CONTENT_URI.buildUpon().appendPath(movie_id).build();
-                    Cursor favouriteCursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-                    if (favouriteCursor.moveToNext() != true) {
-                        ContentValues contentValues = generateContentValues();
-                        Uri insertedUri = getActivity().getContentResolver().insert(MovieContract.FavouriteEntry.CONTENT_URI, contentValues);
-                        long id = ContentUris.parseId(insertedUri);
-                        if (id != -1) {
-                            Toast.makeText(getActivity(), "Added to Favourites", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        deleteFavourite();
-                        Toast.makeText(getActivity(), "Delete from favourites", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            }
 
-        });
-*/
+        detailView.findViewById(R.id.favourite_button).setOnClickListener(this);
+
          //pass ID
         if (intent != null && intent.hasExtra("MOVIE_ID")) {
             movie_id = intent.getStringExtra("MOVIE_ID");
@@ -96,6 +80,9 @@ public class DetailActivityFragment extends Fragment  {
 
             // set activity title
             getActivity().setTitle(movie_title);
+
+            //pass thumb
+            movie_thumb = intent.getStringExtra("MOVIE_THUMB");
 
             //pass poster image
             movie_poster = intent.getStringExtra("MOVIE_POSTER");
@@ -141,12 +128,6 @@ public class DetailActivityFragment extends Fragment  {
             });
 
 
-            //Execute FetchTrailerTask
-            //FetchTrailerTask fetchTrailerTask = new FetchTrailerTask();
-            //fetchTrailerTask.execute();
-            //Execute FetchReviewTask
-            //FetchReviewTask fetchReviewTask = new FetchReviewTask();
-            //fetchReviewTask.execute();
         }
         return detailView;
     }
@@ -160,53 +141,64 @@ public class DetailActivityFragment extends Fragment  {
         //Execute FetchReviewTask
         FetchReviewTask fetchReviewTask = new FetchReviewTask();
         fetchReviewTask.execute();
-        //Favourite button
-        //Button favouriteButton = new Button(getActivity());
-       // favouriteButton.findViewById(R.id.favourite_button).setOnClickListener(favouriteClick);
+
     }
-    // Favourite button onClick
-    /**
-        final OnClickListener favouriteClick = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (v.getId() == R.id.favourite_button) {
-                    Uri uri = MovieContract.FavouriteEntry.CONTENT_URI.buildUpon().appendPath(movie_id).build();
-                    Cursor favouritecursor = getActivity().getContentResolver().query(uri, null, null, null, null);
-                    if (favouritecursor.moveToNext() != true) {
-                        ContentValues contentValues = generateContentValues();
-                        Uri insertedUri = getActivity().getContentResolver().insert(MovieContract.FavouriteEntry.CONTENT_URI, contentValues);
-                        long id = ContentUris.parseId(insertedUri);
-                        if (id != -1) {
-                            Toast.makeText(getActivity(), "Added to Favourites", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        deleteFavourite();
-                        Toast.makeText(getActivity(), "Delete from favourites", Toast.LENGTH_SHORT).show();
-                    }
+
+
+// handle favourite button on click
+    @Override
+    public void onClick(View v) {
+        Log.i(LOG_TAG, "Button clicked-");
+        if(v == null) return;
+        Log.i(LOG_TAG, "Button clicked+");
+
+        final int resId = v.getId();
+        if (resId == R.id.favourite_button) {
+            Uri uri = MovieContract.FavouriteEntry.CONTENT_URI.buildUpon().appendPath(movie_id).build();
+            Log.i(LOG_TAG, "uri is: "+ uri);
+            try {
+            final Cursor favouriteCursor = getActivity().getContentResolver().query(uri, null, null, null, null);
+            Log.i(LOG_TAG, "cursor: "+ favouriteCursor);
+            if ((favouriteCursor != null) && (!(favouriteCursor.moveToNext()))) {
+                ContentValues contentValues = generateContentValues();
+                Uri insertedUri = getActivity().getContentResolver().insert(MovieContract.FavouriteEntry.CONTENT_URI, contentValues);
+                long id = ContentUris.parseId(insertedUri);
+                Log.i(LOG_TAG,"id is :"+id);
+                if (id != -1) {
+                    Toast.makeText(getActivity(), "Added to Favourites", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                deleteFavourite();
+                Toast.makeText(getActivity(), "Delete from favourites", Toast.LENGTH_SHORT).show();
             }
+                if(favouriteCursor != null) {
+                    favouriteCursor.close();
+                }
+            } catch (Exception e) {
 
-*/
-            //insert movie to FavouriteEntry table
-            private ContentValues generateContentValues() {
-                ContentValues favouriteMovieValues = new ContentValues();
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_MOVIE_ID, movie_id);
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_TITLE, movie_title);
-
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_BACK_DROP, movie_backdrop);
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_POSTER, movie_poster);
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_OVERVIEW, movie_overview);
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RATING, movie_rating);
-                favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RELEASE_DATE, movie_release);
-
-
-                return favouriteMovieValues;
             }
+        }
+    }
+    //insert movie to FavouriteEntry table
+    private ContentValues generateContentValues() {
+        ContentValues favouriteMovieValues = new ContentValues();
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_MOVIE_ID, movie_id);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_TITLE, movie_title);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_THUMB, movie_thumb);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_BACK_DROP, movie_backdrop);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_POSTER, movie_poster);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_OVERVIEW, movie_overview);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RATING, movie_rating);
+        favouriteMovieValues.put(MovieContract.FavouriteEntry.COLUMN_RELEASE_DATE, movie_release);
 
-            public void deleteFavourite() {
-                getActivity().getContentResolver().delete(MovieContract.FavouriteEntry.CONTENT_URI, movie_id, null);
-            }
-     //   };
+
+        return favouriteMovieValues;
+    }
+
+    public void deleteFavourite() {
+        getActivity().getContentResolver().delete(MovieContract.FavouriteEntry.CONTENT_URI, movie_id, null);
+    }
+
     // Add FetchTrailerTask
     public class FetchTrailerTask extends AsyncTask<String, Void, String> {
         private final String LOG_TAG = FetchTrailerTask.class.getSimpleName();
@@ -295,18 +287,14 @@ public class DetailActivityFragment extends Fragment  {
             Log.i(LOG_TAG, "Result trailer url is:   " + movieTrailerListKey);
             Log.i(LOG_TAG, "Result trailer name is:   " + movieTrailerListName);
 
-            //ArrayList<Trailer> trailers = new ArrayList<>();
+           // get all member variables in place
             for (int i=0; i< movieTrailerListKey.size(); i++){
                 Trailer trailer = new Trailer();
                 trailer.name = movieTrailerListName.get(i);
                 trailer.key = movieTrailerListKey.get(i);
                 trailers.add(trailer);
             }
-            /**
-            ListView trailerListView = (ListView) getView().findViewById(R.id.trailer_list_view);
-            TrailerAdapter ta = new TrailerAdapter (getContext(),trailers);
-            trailerListView.setAdapter(ta);
-             */
+
             }
         }
 

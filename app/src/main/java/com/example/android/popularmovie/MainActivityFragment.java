@@ -28,7 +28,7 @@ public class MainActivityFragment extends Fragment  {
     public static final String MOVIE_ID = "MOVIE_ID";
     public static final String MOVIE_TITLE = "MOVIE_TITLE";
     public static final String MOVIE_POSTER = "MOVIE_POSTER";
-    //public static final String MOVIE_THUMB = "MOVIE_THUMB";
+    public static final String MOVIE_THUMB = "MOVIE_THUMB";
     public static final String MOVIE_BACKDROP = "MOVIE_BACKDROP";
     public static final String MOVIE_RELEASE = "MOVIE_RELEASE";
     public static final String MOVIE_RATING = "MOVIE_RATING";
@@ -69,6 +69,7 @@ public class MainActivityFragment extends Fragment  {
                 Intent detailIntent = new Intent(getActivity(), DetailActivity.class)
                         .putExtra(MOVIE_ID, movies.get(position).id)
                         .putExtra(MOVIE_TITLE, movies.get(position).title)
+                        .putExtra(MOVIE_THUMB, movies.get(position).thumb)
                         .putExtra(MOVIE_POSTER, movies.get(position).poster)
                         .putExtra(MOVIE_BACKDROP, movies.get(position).back_drop)
                         .putExtra(MOVIE_RELEASE, movies.get(position).release_date)
