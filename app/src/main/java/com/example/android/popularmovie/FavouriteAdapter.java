@@ -36,7 +36,7 @@ public class FavouriteAdapter extends CursorAdapter {
     }
     @Override
     public View newView (Context context,Cursor cursor,ViewGroup parent){
-        int layoutId = R.layout.favourite_grid;
+        int layoutId = R.layout.favourite_image_item;
 
         Log.d (LOG_TAG,  "in new view");
 
@@ -51,6 +51,8 @@ public class FavouriteAdapter extends CursorAdapter {
         Log.d (LOG_TAG, "in bind view");
         int thumbIndex = cursor.getColumnIndex(MovieContract.FavouriteEntry.COLUMN_THUMB);
         int thumbImage =cursor.getInt(thumbIndex);
+        Log.i(LOG_TAG,"thumbIndex:  "+thumbIndex);
+        Log.i(LOG_TAG,"thumbImage:  "+thumbImage);
         viewHolder.favouriteGrid.setImageResource(thumbImage);
     }
 }

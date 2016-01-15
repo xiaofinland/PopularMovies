@@ -11,7 +11,7 @@ import com.example.android.popularmovie.data.MovieContract.FavouriteEntry;
  * Created by Xiao on 22/12/2015.
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 21;
+    private static final int DATABASE_VERSION = 22;
 
     public static final String DATABASE_NAME ="movie.db";
 
@@ -26,7 +26,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 FavouriteEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 FavouriteEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
                 FavouriteEntry.COLUMN_TITLE +" TEXT NOT NULL, "+
-                FavouriteEntry.COLUMN_THUMB + " TEXT NOT NULL, " +
+                FavouriteEntry.COLUMN_THUMB + " INTEGER NOT NULL, " +
                 FavouriteEntry.COLUMN_BACK_DROP + " TEXT NOT NULL, " +
                 FavouriteEntry.COLUMN_POSTER + " TEXT NOT NULL, "+
                 FavouriteEntry.COLUMN_OVERVIEW + " TEXT NOT NULL, " +
